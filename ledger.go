@@ -6,24 +6,26 @@ import (
 	"os"
 )
 
-type LedgerEntry struct {
+type PlayerEntry struct {
 	ID     int     `json:"id"`
-	Amount float64 `json:"amount"`
-	Type   string  `json:"type"`
-	Note   string  `json:"note"`
+	Player string  `json:"player"`
+	Role   string  `json:"role"`  // BAT, BALL, AR
+	Price  float64 `json:"price"` // Auction price
+	Year   int     `json:"year"`  // Auction year
 }
 
-type Ledger struct {
-	Entries []LedgerEntry `json:"entries"`
+type PlayerLedger struct {
+	Entries []PlayerEntry `json:"entries"`
 }
 
-const ledgerFile = "ledger.json"
+const ledgerFile = "player_ledger.json"
 
-func loadLedger() (*Ledger, error) {
+// Load the ledger from file
+func loadLedger() (*PlayerLedger, error) {
 	file, err := os.Open(ledgerFile)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return &Ledger{}, nil
+			return &PlayerLedger{}, nil
 		}
 		return nil, err
 	}
@@ -34,7 +36,7 @@ func loadLedger() (*Ledger, error) {
 		return nil, err
 	}
 
-	var ledger Ledger
+	var ledger PlayerLedger
 	if err := json.Unmarshal(data, &ledger); err != nil {
 		return nil, err
 	}
@@ -42,7 +44,8 @@ func loadLedger() (*Ledger, error) {
 	return &ledger, nil
 }
 
-func saveLedger(ledger *Ledger) error {
+// Save the ledger to file
+func saveLedger(ledger *PlayerLedger) error {
 	data, err := json.MarshalIndent(ledger, "", "  ")
 	if err != nil {
 		return err

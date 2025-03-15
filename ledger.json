@@ -1,3 +1,10 @@
 {
-    "entries": []
+  "entries": [
+    {
+      "id": 1,
+      "amount": 0,
+      "type": "",
+      "note": ""
+    }
+  ]
 }

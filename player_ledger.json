@@ -1,0 +1,18 @@
+{
+  "entries": [
+    {
+      "id": 1,
+      "player": "Virat Kohli",
+      "role": "BAT",
+      "price": 21,
+      "year": 2025
+    },
+    {
+      "id": 2,
+      "player": "Virat Kohli",
+      "role": "BAT",
+      "price": 21,
+      "year": 2025
+    }
+  ]
+}

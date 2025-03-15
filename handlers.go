@@ -6,6 +6,7 @@ import (
 	"strconv"
 )
 
+// Handle requests for multiple player entries
 func handleEntries(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
@@ -17,6 +18,7 @@ func handleEntries(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Handle requests for a single player entry (Update/Delete)
 func handleEntry(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "PUT":
@@ -28,10 +30,11 @@ func handleEntry(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func getAllEntries(w http.ResponseWriter, _ *http.Request) {
+// Get all player entries
+func getAllEntries(w http.ResponseWriter, r *http.Request) {
 	ledger, err := loadLedger()
 	if err != nil {
-		http.Error(w, "Failed to load ledger", http.StatusInternalServerError)
+		http.Error(w, "Failed to load player ledger", http.StatusInternalServerError)
 		return
 	}
 
@@ -39,8 +42,9 @@ func getAllEntries(w http.ResponseWriter, _ *http.Request) {
 	json.NewEncoder(w).Encode(ledger)
 }
 
+// Add a new player entry
 func addEntry(w http.ResponseWriter, r *http.Request) {
-	var newEntry LedgerEntry
+	var newEntry PlayerEntry
 	if err := json.NewDecoder(r.Body).Decode(&newEntry); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
@@ -48,7 +52,7 @@ func addEntry(w http.ResponseWriter, r *http.Request) {
 
 	ledger, err := loadLedger()
 	if err != nil {
-		http.Error(w, "Failed to load ledger", http.StatusInternalServerError)
+		http.Error(w, "Failed to load player ledger", http.StatusInternalServerError)
 		return
 	}
 
@@ -56,7 +60,7 @@ func addEntry(w http.ResponseWriter, r *http.Request) {
 	ledger.Entries = append(ledger.Entries, newEntry)
 
 	if err := saveLedger(ledger); err != nil {
-		http.Error(w, "Failed to save ledger", http.StatusInternalServerError)
+		http.Error(w, "Failed to save player ledger", http.StatusInternalServerError)
 		return
 	}
 
@@ -64,6 +68,7 @@ func addEntry(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(newEntry)
 }
 
+// Update an existing player entry
 func updateEntry(w http.ResponseWriter, r *http.Request) {
 	idStr := r.URL.Query().Get("id")
 	id, err := strconv.Atoi(idStr)
@@ -72,7 +77,7 @@ func updateEntry(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var updatedEntry LedgerEntry
+	var updatedEntry PlayerEntry
 	if err := json.NewDecoder(r.Body).Decode(&updatedEntry); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
@@ -80,13 +85,14 @@ func updateEntry(w http.ResponseWriter, r *http.Request) {
 
 	ledger, err := loadLedger()
 	if err != nil {
-		http.Error(w, "Failed to load ledger", http.StatusInternalServerError)
+		http.Error(w, "Failed to load player ledger", http.StatusInternalServerError)
 		return
 	}
 
 	found := false
 	for i, entry := range ledger.Entries {
 		if entry.ID == id {
+			updatedEntry.ID = id // Ensure ID remains unchanged
 			ledger.Entries[i] = updatedEntry
 			found = true
 			break
@@ -94,12 +100,12 @@ func updateEntry(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !found {
-		http.Error(w, "Entry not found", http.StatusNotFound)
+		http.Error(w, "Player entry not found", http.StatusNotFound)
 		return
 	}
 
 	if err := saveLedger(ledger); err != nil {
-		http.Error(w, "Failed to save ledger", http.StatusInternalServerError)
+		http.Error(w, "Failed to save player ledger", http.StatusInternalServerError)
 		return
 	}
 
@@ -107,6 +113,7 @@ func updateEntry(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(updatedEntry)
 }
 
+// Delete a player entry
 func deleteEntry(w http.ResponseWriter, r *http.Request) {
 	idStr := r.URL.Query().Get("id")
 	id, err := strconv.Atoi(idStr)
@@ -117,11 +124,11 @@ func deleteEntry(w http.ResponseWriter, r *http.Request) {
 
 	ledger, err := loadLedger()
 	if err != nil {
-		http.Error(w, "Failed to load ledger", http.StatusInternalServerError)
+		http.Error(w, "Failed to load player ledger", http.StatusInternalServerError)
 		return
 	}
 
-	newEntries := []LedgerEntry{}
+	newEntries := []PlayerEntry{}
 	found := false
 	for _, entry := range ledger.Entries {
 		if entry.ID == id {
@@ -132,17 +139,17 @@ func deleteEntry(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !found {
-		http.Error(w, "Entry not found", http.StatusNotFound)
+		http.Error(w, "Player entry not found", http.StatusNotFound)
 		return
 	}
 
 	ledger.Entries = newEntries
 
 	if err := saveLedger(ledger); err != nil {
-		http.Error(w, "Failed to save ledger", http.StatusInternalServerError)
+		http.Error(w, "Failed to save player ledger", http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Entry deleted"))
+	w.Write([]byte("Player entry deleted"))
 }
