@@ -2,9 +2,38 @@
   "entries": [
     {
       "id": 1,
-      "amount": 0,
-      "type": "",
-      "note": ""
+      "player": "Virat Kohli",
+      "role": "BAT",
+      "price": 21.0,
+      "year": 2025
+    },
+    {
+      "id": 2,
+      "player": "Rajat Patidar",
+      "role": "BAT",
+      "price": 15.0,
+      "year": 2025
+    },
+    {
+      "id": 3,
+      "player": "Yash Dhayal",
+      "role": "BALL",
+      "price": 4.0,
+      "year": 2025
+    },
+    {
+      "id": 4,
+      "player": "Bhuvaneshwar Kumar",
+      "role": "BALL",
+      "price": 12.0,
+      "year": 2025
+    },
+    {
+      "id": 5,
+      "player": "Josh Hazelwood",
+      "role": "BALL",
+      "price": 12.0,
+      "year": 2025
     }
   ]
 }
