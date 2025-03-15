@@ -12,8 +12,8 @@ func main() {
 		w.Write([]byte("pong"))
 	})
 
-	http.HandleFunc("/entries", handleEntries)
-	http.HandleFunc("/entry", handleEntry)
+	http.HandleFunc("/entries", handleEntries) // Handles GET & POST
+	http.HandleFunc("/entry", handleEntry)     // Handles PUT & DELETE
 
 	fmt.Println("Server running on port 8080...")
 	log.Fatal(http.ListenAndServe(":8080", nil))

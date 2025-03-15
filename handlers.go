@@ -28,7 +28,7 @@ func handleEntry(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func getAllEntries(w http.ResponseWriter, r *http.Request) {
+func getAllEntries(w http.ResponseWriter, _ *http.Request) {
 	ledger, err := loadLedger()
 	if err != nil {
 		http.Error(w, "Failed to load ledger", http.StatusInternalServerError)
